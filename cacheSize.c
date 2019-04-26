@@ -4,13 +4,20 @@
 #include <math.h>
 
 
-void cacheSize(int numOfTrys, int* switchSpot,int* count){
+void cacheSizeCalculation(int numOfTrys, int* switchSpot,int* count){
+	/*cacheSize is a function used to expirementally obtain an estimate of the size of the cache.  
+	Parameters:
+	numOfTrys: number of times to try the program and total powers of two to use
+	switchSpot: pointer to a sum of locations in which their is a significant switch in times
+	count: pointer to a count of the number of significant switches
+
+	*/
 	//forward declaration of variables
 	int i = 0; // for iteration
 	int j = 0;
 	struct timespec startTime, endTime; //time structs for start & end times
 	int* pow2; // pointer to array of powers of 2
-	int pow2Elements = 25; // elements in power of 2 array
+	int pow2Elements = numOfTrys; // elements in power of 2 array
 	int* array = 0; // array for accessing cache
 	int arraySize = 1000000; // size of array
 	long* differences =0; // array of difference values
@@ -47,6 +54,50 @@ void cacheSize(int numOfTrys, int* switchSpot,int* count){
 			*switchSpot = *switchSpot + i;
 			*count = *count + 1;
 			}
+		}
+	}	
+		
+
+	
+	//free any allocated memory
+	free(pow2);
+	free(array);
+	free(differences);
+
+	
+}//end cacheSizeCalculation
+
+int cacheSize(int attempts){
+	/* Cache size calls the cacheSizeCalculation to calculate an average of access.  
+	 It returns the exponent to raise 2 to in order to get the cache size
+	 Paramaters:
+	 attempts: total number of times to run cacheSizeCalculation, minimum recommendation of 500 
+	*/
+	int avg;
+	int* count = malloc(sizeof(int));
+	int* switchSpot = malloc(sizeof(int));
+	for(int i = 0; i < attempts; i++){
+	cacheSizeCalculation(30,switchSpot,count);
+	}
+	
+
+	avg = (*switchSpot) / (*count);
+
+	
+	
+	free(count);
+	free(switchSpot);
+	return avg;
+
+}
+int main(int argc, char** argv){
+	int avg = cacheSize(1000);
+	printf("Cache Size = 2^%d or %d bytes\n",avg,(int)pow(2,avg));
+}
+
+
+
+
 		}
 	}	
 		
