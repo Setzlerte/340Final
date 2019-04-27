@@ -123,7 +123,7 @@ int blockSize(int attempts){
 	free(switchSpot);
 	return avg;
 }//end blockSize
-
+/*
 int main(int argc, char** argv){
 	int numTests = 1000;
 	int cache = cacheSize(numTests);
@@ -132,7 +132,50 @@ int main(int argc, char** argv){
 	printf("Block size = 2^%d or %d bits\n",block,(int)pow(2,block));
 
 }
+*/
 
+
+int mainMemory (int cachePower,int block){
+	struct timespec startTime, endTime;
+	int i;
+	int diff = 0;
+	int size = pow(2,cachePower); //set size of array to the power of two where cache ended
+	int arr[size + block];
+	int temp = 0;
+	
+	//start timer and run i through most of size
+	clock_gettime(CLOCK_MONOTONIC,&startTime);
+	for (i=0; i < (size); i = i + block){
+		temp = arr[i];
+	}
+	clock_gettime(CLOCK_MONOTONIC,&endTime);
+
+	//our time variable
+	diff = endTime.tv_nsec - startTime.tv_nsec;
+	//printf(" \nTime in Main Memory: %d nanosec\n", diff);
+
+	return diff;
+	
+
+}//end mainMem
+
+int main(int argc, char** argv){
+	int i;
+	int mainAvg = 0 ;
+	int tryNum = 500; //try this power of two
+	int cache = cacheSize(tryNum);
+	printf("Cache Size = 2^%d or %d bytes\n",cache,(int)pow(2,cache));
+	int block = blockSize(tryNum);
+	printf("Block Size = 2^4%d or %d bits\n",block,(int)pow(2,block));
+
+	//average for main mem time
+	for (i=0; i < tryNum; i++){
+		mainAvg = mainAvg + mainMemory(cache,pow(2,block));
+	}
+	mainAvg = mainAvg / tryNum;
+	printf("\nTime to Main Memory is: %d \n", mainAvg);
+	return 0;
+}
 
 
 
