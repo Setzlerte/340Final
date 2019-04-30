@@ -72,3 +72,6 @@ double mainMemory(int cache, int tryTimes, int block){
 	block: size of block
 */
 }
+int main(int argc, char** argv){
+	//Main method to run the code
+}
