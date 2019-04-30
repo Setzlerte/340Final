@@ -1,5 +1,5 @@
 README
-
+Thomas Setzler and 
 
 1. How Big Is A Cache Block?
 	The cache block size is found by probing access times to memory based on powers of two. The time to perform each access is recorded into an array.  These access times are differenced based on each power of two used to access memory and locations at which the time increases by a power of two are recorded and averaged together to obtain the cache block size.
